@@ -42,4 +42,32 @@ public class CategoryService {
             throw new InformationNotFoundException("Category id: " + id + " not found.");
         }
     }
+
+    public Category updateCategory(Long id, Category categoryObject){
+        System.out.println("Service calling updateCategory()  ==>");
+        Optional<Category> category = categoryRepository.findById(id);
+
+        if(category.isPresent()){
+            Category updateCategory = category.get();
+            updateCategory.setName(categoryObject.getName());
+            updateCategory.setDescription(categoryObject.getDescription());
+            return categoryRepository.save(updateCategory);
+        } else {
+            throw new InformationNotFoundException("Category with id " + id + " not found");
+        }
+
+    }
+
+    public Optional<Category> deleteCategory(Long id){
+        System.out.println("Service calling deleteCategory()  ==>");
+        Optional<Category> category = categoryRepository.findById(id);
+
+        if(category.isPresent()){
+            categoryRepository.deleteById(id);
+            return category;
+        } else {
+            throw new InformationNotFoundException("Category with id " + id + " not found");
+        }
+
+    }
 }

@@ -38,4 +38,19 @@ public class CategoryController {
         System.out.println("Calling getCategory()");
         return categoryService.getCategory(id);
     }
+
+    //update category
+    @PutMapping("/categories/{id}")
+    public Category updateCategory(@PathVariable (value = "id") Long id, @RequestBody Category categoryObject){
+        System.out.println("calling updateCategory ==>");
+
+        return categoryService.updateCategory(id, categoryObject);
+    }
+
+    //delete category
+    @DeleteMapping("/categories/{id}")
+    public Optional<Category> deleteCategory(@PathVariable (value = "id") Long id){
+        System.out.println("calling deleteCategory ==>");
+        return categoryService.deleteCategory(id);
+    }
 }
