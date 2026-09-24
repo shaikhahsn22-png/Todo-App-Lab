@@ -1,10 +1,10 @@
 package com.ga.todoapp.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import  lombok.*;
+import lombok.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,9 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "categories")
+@Table(name= "items")
+public class Item {
 
-public class Category {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,12 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", orphanRemoval = true)
-    private List<Item> itemList;
+    @Column
+    private LocalDate dueDate;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="categoryId")
+    private Category category;
+    
 }
