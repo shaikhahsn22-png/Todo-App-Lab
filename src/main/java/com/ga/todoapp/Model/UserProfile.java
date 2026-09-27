@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"user"})
 @Getter
 @Setter
 @Entity
-@Table(name= "items")
-public class Item {
+@Table(name = "profiles")
+public class UserProfile {
 
     @Id
     @Column
@@ -21,23 +19,16 @@ public class Item {
     private Long id;
 
     @Column
-    private String name;
+    private String firstName;
 
     @Column
-    private String description;
+    private String lastName;
 
     @Column
-    private LocalDate dueDate;
+    private String profileDescription;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="categoryId")
-    private Category category;
-
-    //add user
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @OneToOne(mappedBy = "userProfile", fetch = FetchType.LAZY)
     private User user;
-    
+
 }
