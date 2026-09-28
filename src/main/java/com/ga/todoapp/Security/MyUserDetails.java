@@ -2,6 +2,7 @@ package com.ga.todoapp.Security;
 
 import com.ga.todoapp.Model.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class MyUserDetails implements UserDetails {
     private User user;
 

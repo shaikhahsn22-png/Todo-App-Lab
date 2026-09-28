@@ -3,8 +3,11 @@ package com.ga.todoapp.Service;
 import com.ga.todoapp.Exception.InformationExistException;
 import com.ga.todoapp.Exception.InformationNotFoundException;
 import com.ga.todoapp.Model.Category;
+import com.ga.todoapp.Model.User;
 import com.ga.todoapp.Repository.CategoryRepository;
+import com.ga.todoapp.Security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -16,9 +19,14 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public static User getCurrentLoggedInUser(){
+        MyUserDetails userDetails =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUser();
+    }
+
     public List<Category> getAllCategories(){
         System.out.println("service calling getAllCategories() ==>");
-        return categoryRepository.findAll();
+        return categoryRepository.findByUserId(getCurrentLoggedInUser().getId());
     }
 
 
@@ -29,13 +37,14 @@ public class CategoryService {
             throw new InformationExistException("Category with name " + category.getName() + " already exists.");
         }
 
+        categoryObject.setUser(getCurrentLoggedInUser());
         return categoryRepository.save(categoryObject);
 
     }
 
     public Optional<Category> getCategory(Long id){
         System.out.println("service calling getCategory() ==>");
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryRepository.findByIdAndUserId(id, getCurrentLoggedInUser().getId());
         if(category.isPresent()){
             return category;
         }else {
@@ -45,7 +54,7 @@ public class CategoryService {
 
     public Category updateCategory(Long id, Category categoryObject){
         System.out.println("Service calling updateCategory()  ==>");
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryRepository.findByIdAndUserId(id, getCurrentLoggedInUser().getId());
 
         if(category.isPresent()){
             Category updateCategory = category.get();
@@ -60,7 +69,7 @@ public class CategoryService {
 
     public Optional<Category> deleteCategory(Long id){
         System.out.println("Service calling deleteCategory()  ==>");
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryRepository.findByIdAndUserId(id, getCurrentLoggedInUser().getId());
 
         if(category.isPresent()){
             categoryRepository.deleteById(id);
